@@ -1,0 +1,257 @@
+swagger: '2.0'
+
+info:
+  version: "0.0.1"
+  title: CarBoN API
+  description: |
+    The CarBoN API is a part of the API crash test project initiated by Arnaud Lauret, the [API Handyman](http://apihandyman.io). CarBoN stands for Car Boot Network.
+    [Learn more about the API crash test project](http://apihandyman.io/the-api-crash-test-project/)
+
+paths:
+  /persons:
+    # This is a HTTP operation
+    get:
+      tags: 
+        - person
+      summary: List persons
+      description: Lists all persons.
+      operationId: listPersons
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Person"
+        default:
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"
+  /persons/{id}:
+    get:
+      tags:
+        - person
+      summary: Get person
+      description: Gets a `Person`.
+      operationId: getPerson
+      produces:
+        - application/json
+      parameters:
+      -
+          name: id
+          in: path
+          description: Person's id.
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successful response.
+          schema:
+            $ref: "#/definitions/Person"
+        404:
+          description: The person do not exists.
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"
+  /persons/{id}/items:
+    get:
+      tags:
+        - person
+        - item
+      summary: Items list
+      operationId: getPersonItems
+      description: Gets a `Person`'s list of `Items`.
+      parameters:
+      -
+        name: id
+        in: path
+        description: Person's id.
+        required: true
+        type: string
+      responses:
+        200: 
+          description: Successful response.
+          schema:
+            type: array
+            items:  
+              $ref: "#/definitions/Item"
+        404:
+          description: The person do not exists.
+          schema:
+            $ref: "#/definitions/Error"
+        default: 
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      tags:
+        - item
+        - person
+      summary: Add item
+      description: Adds an `Item` to a `Person`'s list.
+      operationId: addItem
+      produces:
+        - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Person's id.
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: Item to add.
+        required: true
+        schema:
+          $ref: "#/definitions/Item"
+      responses:
+        200: 
+          description: The item has been added.
+          schema:
+            $ref: "#/definitions/Item"
+        default: 
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"
+  /items/{id}:
+    put:
+      tags:
+        - item
+      summary: Update item
+      description: Updates an `Item`.
+      operationId: updateItem
+      produces:
+        - application/json
+      parameters:
+      -
+        name: id
+        in: path
+        description: Item's id.
+        required: true
+        type: number
+        format: double
+      responses:
+        200: 
+          description: The item has been updated.
+          schema:
+            $ref: "#/definitions/Item"
+        404:
+          description: The item do not exists.
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      summary: Delete item
+      description: Deletes an `Item`.
+      operationId: deleteItem
+      produces:
+        - application/json
+      parameters:
+      -
+        name: id
+        in: path
+        description: Item's UUID.
+        required: true
+        type: string
+      responses:
+        200: 
+          description: The item has been deleted.
+        404:
+          description: The item do not exists.
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"
+  /items/{id}/images:
+    get:
+      tags:
+        - media
+        - item
+      summary: List item's images.
+      description: List all `Media` for an `Item`.
+      operationId: getItemsImages
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Item's UUID.
+          required: true
+          type: string
+      responses:
+        200: 
+          description: The item has been deleted.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Media"
+        404:
+          description: The item do not exists.
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"
+definitions:
+  Error:
+    properties:
+      code: 
+        type: string
+        description: The error code.
+      message:
+        type: string
+        description: The error message.
+  Person:
+    required:
+      - username
+    properties:
+      id:
+        type: string
+        description: Person's UUID.
+      username:
+        type: string
+        description: Person's username.
+      firstName:
+        type: string
+        description: Person's lastname.
+      lastName:
+        type: string
+        description: Person's firstname.
+  Item:
+    required:
+      - price
+    properties:
+      id:
+        type: string
+        description: Item's UUID.
+      price:
+        type: number
+        format: float
+        description: Item's price.
+      label:
+        type: string
+        description: Item's label.
+      comment:
+        type: string
+        description: Item's comment.
+  Media:
+    required:
+      - url
+    properties:
+      id:
+        type: string
+        description: Media's UUID.
+      url:
+        type: string
+        description: Media's URL.
