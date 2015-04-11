@@ -14,7 +14,7 @@ paths:
       tags: 
         - person
       summary: List persons
-      description: Lists all persons.
+      description: Lists all `Person` resources.
       operationId: listPersons
       produces:
         - application/json
@@ -95,6 +95,8 @@ paths:
       summary: Add item
       description: Adds an `Item` to a `Person`'s list.
       operationId: addItem
+      consumes:
+        - application/json
       produces:
         - application/json
       parameters:
@@ -125,6 +127,8 @@ paths:
       summary: Update item
       description: Updates an `Item`.
       operationId: updateItem
+      consumes:
+        - application/json
       produces:
         - application/json
       parameters:
@@ -190,11 +194,94 @@ paths:
           type: string
       responses:
         200: 
-          description: The item has been deleted.
+          description: Successful response.
           schema:
             type: array
             items:
               $ref: "#/definitions/Media"
+        404:
+          description: The item do not exists.
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      tags:
+        - media
+        - item
+      summary: Add image to item.
+      description: Adds a `Media` to an `Item`.
+      operationId: addMediaToItem
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Item's UUID.
+          required: true
+          type: string
+      responses:
+        200: 
+          description: The image has been added.
+          schema:
+            $ref: "#/definitions/Media"
+        404:
+          description: The item do not exists.
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"  
+  /medias/{id}:
+    get:
+      tags:
+        - media
+      summary: Get media
+      description: Gets a `Media`.
+      operationId: getMedia
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Media's UUID.
+          required: true
+          type: string
+      responses:
+        200: 
+          description: Successful response.
+          schema:
+            $ref: "#/definitions/Media"
+        404:
+          description: The item do not exists.
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: Something wrong happened.
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+        - media
+      summary: Delete media
+      description: Deletes a `Media`.
+      operationId: deleteMedia
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Media's UUID.
+          required: true
+          type: string
+      responses:
+        200: 
+          description: The Media has been deleted.
         404:
           description: The item do not exists.
           schema:
