@@ -153,6 +153,8 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     delete:
+      tags:
+        - item
       summary: Delete item
       description: Deletes an `Item`.
       operationId: deleteItem
